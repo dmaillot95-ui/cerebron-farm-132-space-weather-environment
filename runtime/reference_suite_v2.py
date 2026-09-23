@@ -1,0 +1,4 @@
+import json,math,hashlib,pathlib,platform
+n_cm3=5.;n=n_cm3*1e6;mp=1.67262192369e-27;v=400e3;B=5e-9;mu0=4*math.pi*1e-7
+pdyn=n*mp*v*v;pmag=B*B/(2*mu0);beta=pdyn/pmag;ok=1e-10<pdyn<2e-9 and 5e-12<pmag<2e-11 and beta>10
+out={"farm":132,"engine":"python-space-weather-reference-suite-v2","test":"SOLAR_WIND_PRESSURE_BALANCE","density_cm3":n_cm3,"speed_m_s":v,"magnetic_field_t":B,"dynamic_pressure_pa":pdyn,"magnetic_pressure_pa":pmag,"dynamic_to_magnetic_ratio":beta,"status":"REFERENCE_SUITE_OK" if ok else "FAIL","scope":"IDEAL_SOLAR_WIND_REFERENCE_NOT_CCMC_OR_SPACECRAFT_ENVIRONMENT_VALIDATION","python":platform.python_version()};raw=json.dumps(out,sort_keys=True).encode();out["result_sha256"]=hashlib.sha256(raw).hexdigest();pathlib.Path("artifacts").mkdir(exist_ok=True);pathlib.Path("artifacts/f132_reference_suite.json").write_text(json.dumps(out,indent=2)+"\n");print(json.dumps(out));raise SystemExit(0 if ok else 1)
